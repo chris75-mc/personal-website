@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etes vous imposable ?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .hidden {
+            display: none;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .restart {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Etes vous imposable ?</h2>
+
+        <!-- Étape 1 -->
+        <div id="step1">
+            <form id="ageForm">
+                <label for="age">Avez-vous plus de 18 ans ?</label><br>
+                <input type="radio" id="yes" name="age" value="yes">
+                <label for="yes">Oui</label><br>
+                <input type="radio" id="no" name="age" value="no">
+                <label for="no">Non</label><br><br>
+                <button type="button" onclick="goToStep2()">Valider</button>
+            </form>
+        </div>
+
+        <!-- Étape 2 : Si réponse "oui" -->
+        <div id="step2-yes" class="hidden">
+            <form id="incomeForm">
+                <label for="income">Avez-vous un revenu annuel supérieur à 30 000€ ?</label><br>
+                <input type="radio" id="income-yes" name="income" value="yes">
+                <label for="income-yes">Oui</label><br>
+                <input type="radio" id="income-no" name="income" value="no">
+                <label for="income-no">Non</label><br><br>
+                <button type="button" onclick="checkIncome()">Valider</button>
+            </form>
+        </div>
+
+        <!-- Étape 2 : Si réponse "non" -->
+        <div id="step2-no" class="hidden">
+            <form id="schoolForm">
+                <label for="school">Êtes-vous encore à l'école ?</label><br>
+                <input type="radio" id="school-yes" name="school" value="yes">
+                <label for="school-yes">Oui</label><br>
+                <input type="radio" id="school-no" name="school" value="no">
+                <label for="school-no">Non</label><br><br>
+                <button type="button" onclick="checkSchool()">Valider</button>
+            </form>
+        </div>
+
+        <!-- Résultat final -->
+        <div id="response" class="result hidden"></div>
+
+        <!-- Bouton recommencer -->
+        <button id="restartBtn" class="restart hidden" onclick="resetForm()">Recommencer</button>
+    </div>
+
+    <script>
+        function goToStep2() {
+            const ageChoice = document.querySelector('input[name="age"]:checked');
+            if (ageChoice) {
+                document.getElementById('step1').classList.add('hidden');
+                if (ageChoice.value === "yes") {
+                    document.getElementById('step2-yes').classList.remove('hidden');
+                } else {
+                    document.getElementById('step2-no').classList.remove('hidden');
+                }
+            } else {
+                alert("Veuillez choisir une option.");
+            }
+        }
+
+        function checkIncome() {
+            const incomeChoice = document.querySelector('input[name="income"]:checked');
+            if (incomeChoice) {
+                const response = document.getElementById('response');
+                if (incomeChoice.value === "yes") {
+                    response.textContent = "Vous êtes dans une tranche d'imposition élevée.";
+                } else {
+                    response.textContent = "Vous êtes dans une tranche d'imposition moyenne.";
+                }
+                document.getElementById('step2-yes').classList.add('hidden');
+                response.classList.remove('hidden');
+                document.getElementById('restartBtn').classList.remove('hidden');
+            } else {
+                alert("Veuillez choisir une option.");
+            }
+        }
+
+        function checkSchool() {
+            const schoolChoice = document.querySelector('input[name="school"]:checked');
+            if (schoolChoice) {
+                const response = document.getElementById('response');
+                if (schoolChoice.value === "yes") {
+                    response.textContent = "Concentrez-vous sur vos études.";
+                } else {
+                    response.textContent = "Préparez-vous à entrer dans le monde du travail.";
+                }
+                document.getElementById('step2-no').classList.add('hidden');
+                response.classList.remove('hidden');
+                document.getElementById('restartBtn').classList.remove('hidden');
+            } else {
+                alert("Veuillez choisir une option.");
+            }
+        }
+
+        function resetForm() {
+            // Réinitialise toutes les étapes
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step2-yes').classList.add('hidden');
+            document.getElementById('step2-no').classList.add('hidden');
+            document.getElementById('response').classList.add('hidden');
+            document.getElementById('restartBtn').classList.add('hidden');
+
+            // Efface les choix précédents
+            document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+
+            // Efface le texte de résultat
+            document.getElementById('response').textContent = "";
+        }
+    </script>
+
+</body>
+</html>
